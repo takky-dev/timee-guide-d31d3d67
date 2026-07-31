@@ -248,7 +248,7 @@ h1 .mk{background:linear-gradient(transparent 58%,#fff 58%);padding:0 2px}
 
 /* タイミーとは */
 .stats{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat{background:var(--soft);border-radius:var(--r);padding:22px 14px;text-align:center}
+.stat{background:#fff;border-radius:var(--r);padding:22px 14px;text-align:center}
 .stat .icon-lg{margin:0 auto 10px;color:#9A8300}
 .stat b{display:block;font-size:23px;font-weight:700;line-height:1.3}
 .stat small{display:block;font-size:12.5px;color:var(--sub);margin-top:6px;font-weight:700}
@@ -386,6 +386,25 @@ footer{padding:28px 20px 34px;text-align:center;font-size:12px;color:#6B6B6B}
 @media(min-width:820px){
   
 }
+
+.task-grid{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.task{background:var(--soft);border-radius:var(--r-sm);padding:18px 14px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.task:last-child{grid-column:1/-1}
+.task .ic{width:44px;height:44px;border-radius:999px;background:var(--y);
+  display:flex;align-items:center;justify-content:center}
+.task .ic svg{width:22px;height:22px;color:var(--ink)}
+.task b{font-size:13.5px;font-weight:700;line-height:1.5}
+.voice-list{margin-top:26px;display:grid;gap:14px}
+.voice-card{background:var(--soft);border-radius:var(--r);padding:22px 20px}
+.voice-card .q{font-size:26px;font-weight:700;color:var(--y);line-height:1;display:block}
+.voice-card p{font-size:14.5px;font-weight:700;line-height:1.8;margin-top:6px}
+.voice-card .who{margin-top:12px;font-size:12px;color:var(--sub);font-weight:400}
+@media(min-width:820px){
+  .task-grid{grid-template-columns:repeat(5,1fr)}
+  .task:last-child{grid-column:auto}
+  .voice-list{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
@@ -406,7 +425,7 @@ footer{padding:28px 20px 34px;text-align:center;font-size:12px;color:#6B6B6B}
 <g id="i-arrow" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13M6.6 12.4 12 17.8l5.4-5.4"/></g>
 <g id="i-clock" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.2V12l3.6 2.2"/></g>
 <g id="i-yen" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l6 7.4L18 6M8.6 14h6.8M8.6 17.4h6.8M12 13.4V20"/></g>
-</defs></svg>
+<g id="i-meal" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 0 16 0z"/><path d="M9 8V6M12 8V5M15 8V6"/></g><g id="i-car" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v-4.5L6 7.8A2 2 0 0 1 7.8 6.5h8.4A2 2 0 0 1 18 7.8l2 4.7V17"/><path d="M4 12.5h16"/><circle cx="7.5" cy="17" r="1.7"/><circle cx="16.5" cy="17" r="1.7"/></g><g id="i-bath" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h16v2a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 13V6.5A2.5 2.5 0 0 1 11 6"/></g><g id="i-clean" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4l1.5 3.5L14 9l-3.5 1.5L9 14l-1.5-3.5L4 9l3.5-1.5z"/><path d="M17 13l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></g><g id="i-cook" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10h14v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M3 10h18M12 10V7.5"/></g></defs></svg>
 
 <!-- =====================================================
      画面1：求人詳細 + 資格選択
@@ -552,7 +571,23 @@ footer{padding:28px 20px 34px;text-align:center;font-size:12px;color:#6B6B6B}
     </div>
   </section>
 
-  <section class="sec sec-tight">
+    <section class="sec sec-tight">
+    <div class="wrap2">
+      <span class="sec-tag">お仕事内容</span>
+      <h2>たとえば、<span class="mk">こんなお仕事</span>があります</h2>
+      <p class="lead">資格や経験に合わせて、できる仕事を選んで応募できます。</p>
+      <div class="task-grid">
+<div class="task"><span class="ic"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-meal"/></svg></span><b>食事の準備・介助</b></div>
+<div class="task"><span class="ic"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-bath"/></svg></span><b>入浴介助</b></div>
+<div class="task"><span class="ic"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-car"/></svg></span><b>送迎ドライバー</b></div>
+<div class="task"><span class="ic"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-clean"/></svg></span><b>清掃・シーツ交換</b></div>
+<div class="task"><span class="ic"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-cook"/></svg></span><b>調理スタッフ</b></div>
+      </div>
+      <p class="note">※タイミー公式サイトで紹介されている介護のお仕事の例です。募集内容は求人により異なります。</p>
+    </div>
+  </section>
+
+  <section class="sec sec-soft sec-tight">
     <div class="wrap2 narrow" style="text-align:center">
       <span class="sec-tag">タイミーとは</span>
       <h2>面接なしで、<span class="mk">働きたい日に働ける</span></h2>
@@ -560,8 +595,31 @@ footer{padding:28px 20px 34px;text-align:center;font-size:12px;color:#6B6B6B}
       <div class="stats">
         <div class="stat"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-people"/></svg><b>1,420万人</b><small>利用者数</small><i>2026年4月末時点</i></div>
         <div class="stat"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-coin"/></svg><b>当日払い</b><small>働いたその日に</small><i>報酬が確定します</i></div>
-        <div class="stat"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-nodoc"/></svg><b>面接なし</b><small>履歴書も不要</small><i>申込はアプリで完結</i></div>
-        <div class="stat"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-cal"/></svg><b>週1日〜</b><small>1日だけでもOK</small><i>好きな日に働ける</i></div>
+        <div class="stat"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-check"/></svg><b>3人に2人</b><small>がリピーター</small><i>働いた人がまた選ぶ</i></div>
+        <div class="stat"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-cert"/></svg><b>8割</b><small>が資格保有者</small><i>介護経験ワーカーのうち</i></div>
+      </div>
+      <p class="note" style="text-align:center">※タイミー公式サイトより（利用者数は2026年4月末時点）</p>
+    </div>
+  </section>
+
+    <section class="sec sec-tight">
+    <div class="wrap2 narrow">
+      <span class="sec-tag">現場の声</span>
+      <h2>「資格を持つ方に来てほしい」<br>そんな現場が、<span class="mk">あなたを待っています</span>。</h2>
+      <div class="voice-list">
+        <div class="voice-card"><span class="q">&ldquo;</span>
+          <p>初任者研修や介護福祉士など、資格を持つ方とタイミーで出会えました。これからも資格のある方に来てほしいです。</p>
+          <div class="who">介護施設の運営者</div>
+        </div>
+        <div class="voice-card"><span class="q">&ldquo;</span>
+          <p>夜勤も、繰り返し来てくれるワーカーさんに助けられています。</p>
+          <div class="who">介護事業所の運営者</div>
+        </div>
+      </div>
+      <p class="note">※タイミー公式サイト「導入事例」の内容を要約したものです。</p>
+      <div class="mid-cta">
+        <a class="btn" href="https://timee.go.link/kMTLo">アプリで介護のお仕事を見る（無料）</a>
+        <p class="btn-note">登録無料 ・ 最短3分</p>
       </div>
     </div>
   </section>
