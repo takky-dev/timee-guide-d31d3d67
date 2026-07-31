@@ -75,7 +75,7 @@ h2 .mk{background:linear-gradient(transparent 62%,var(--y) 62%);padding:0 2px}
 /* ===================================================
    画面1：求人 + 資格選択
 =================================================== */
-#screen1{padding-bottom:calc(152px + env(safe-area-inset-bottom))}
+#screen1{padding-bottom:calc(116px + env(safe-area-inset-bottom))}
 .topbar{
   background:var(--ink);color:#fff;padding:14px 20px;
   display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;
@@ -83,7 +83,7 @@ h2 .mk{background:linear-gradient(transparent 62%,var(--y) 62%);padding:0 2px}
 .topbar .dot{width:9px;height:9px;border-radius:var(--pill);background:var(--y);flex:none}
 
 /* 進行表示（機能的な現在地の提示） */
-.prog{background:var(--ink);padding:0 20px 14px}
+.prog{background:var(--ink);padding:0 20px 10px}
 .prog-in{max-width:680px;margin:0 auto;display:flex;align-items:center;gap:10px}
 .prog-step{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:#B0B0B0}
 .prog-step.on{color:var(--y)}
@@ -128,7 +128,7 @@ h2 .mk{background:linear-gradient(transparent 62%,var(--y) 62%);padding:0 2px}
 .sec2{padding:24px 0}
 .sec2-h{font-size:16px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:9px}
 .sec2-h .icon{width:20px;height:20px;color:#9A8300}
-.sec2-sub{font-size:12.5px;color:var(--sub);margin-bottom:16px}
+.sec2-sub{font-size:12.5px;color:var(--sub);margin:-6px 0 12px}
 .warn-note{
   background:var(--y-soft);border-radius:var(--r-sm);
   padding:14px 17px;font-size:12px;color:#7A6420;line-height:1.7;
@@ -136,24 +136,20 @@ h2 .mk{background:linear-gradient(transparent 62%,var(--y) 62%);padding:0 2px}
 }
 .warn-note .icon{width:17px;height:17px;flex:none;margin-top:2px;color:#A88A17}
 
-.qual-list{display:grid;gap:10px}
+.qual-list{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .qual-section{background:var(--soft);padding:26px 0 30px}
-.qual-card{
-  position:relative;display:block;
-  background:var(--card);border:none;border-radius:var(--r-sm);
-  padding:18px 20px;cursor:pointer;transition:.12s ease;
-}
+.qual-card{position:relative;display:flex;align-items:center;justify-content:center;
+  min-height:64px;background:var(--card);border:none;border-radius:var(--r-sm);
+  padding:12px 10px;cursor:pointer;transition:.12s ease;text-align:center}
 .qual-card input{position:absolute;opacity:0;pointer-events:none}
-.qual-card .row{display:flex;align-items:center;gap:13px}
-.qual-card .radio{
-  width:22px;height:22px;border-radius:var(--pill);border:2px solid #CFCFCF;
-  flex:none;position:relative;transition:.12s ease;
-}
+.qual-card .row{display:flex;align-items:center;gap:8px}
+.qual-card .radio{width:18px;height:18px;border-radius:var(--pill);border:2px solid #CFCFCF;
+  flex:none;position:relative;transition:.12s ease}
 .qual-card .radio::after{
   content:"";position:absolute;inset:3px;border-radius:var(--pill);background:var(--y);
   transform:scale(0);transition:.12s ease;
 }
-.qual-card .label{font-size:15.5px;font-weight:700}
+.qual-card .label{font-size:13.5px;font-weight:700;line-height:1.4}
 .qual-card:has(input:checked),
 .qual-card.is-selected{box-shadow:inset 0 0 0 2px var(--ink)}
 .qual-card:has(input:checked) .radio,
@@ -179,7 +175,7 @@ h2 .mk{background:linear-gradient(transparent 62%,var(--y) 62%);padding:0 2px}
 }
 .cta-btn.active{background:var(--blue);color:#fff;cursor:pointer;box-shadow:0 6px 0 var(--blue-d)}
 .cta-btn.active:active{transform:translateY(4px);box-shadow:0 2px 0 var(--blue-d)}
-.cta-hint{text-align:center;font-size:12px;color:var(--sub);margin-top:10px}
+.cta-hint{text-align:center;font-size:12px;color:var(--sub);margin-top:7px}
 
 /* ===================================================
    画面2：訴求LP
@@ -430,6 +426,18 @@ footer{padding:28px 20px 34px;text-align:center;font-size:12px;color:#6B6B6B}
 @media(min-width:820px){
   .hero-grid > .chips{grid-column:1/2}
 }
+
+.job-detail-acc{background:var(--soft);border-radius:var(--r-sm);padding:6px 16px}
+.job-detail-acc summary{font-size:13.5px;font-weight:700;cursor:pointer;list-style:none;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px;color:var(--sub)}
+.job-detail-acc summary::-webkit-details-marker{display:none}
+.job-detail-acc summary::after{content:"＋";color:var(--ink);background:var(--y);
+  width:22px;height:22px;border-radius:var(--pill);flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.job-detail-acc[open] summary::after{content:"−"}
+.job-detail-acc .jd-body{margin-top:12px}
+.job-detail-acc .spec-sec{padding:0}
+.job-detail-acc .wrap{padding:0}
 </style>
 </head>
 <body>
@@ -477,24 +485,9 @@ footer{padding:28px 20px 34px;text-align:center;font-size:12px;color:#6B6B6B}
     </div>
   </section>
 
-  <section class="spec-sec">
-    <div class="wrap">
-      <div class="spec">
-        <div class="spec-row"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-pin"/></svg><b>勤務地</b><span id="specArea">大阪府堺市西区（最寄駅：鳳駅）</span></div>
-        <div class="spec-row"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-yen"/></svg><b>給与</b><span id="specPay">時給 1,280円〜</span></div>
-        <div class="spec-row"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-clock"/></svg><b>勤務時間</b><span id="specHours">0:00〜24:00の中で希望の時間</span></div>
-        <div class="spec-row"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-cert"/></svg><b>必須資格</b><span id="specEdu">介護関連の資格</span></div>
-      </div>
-    </div>
-  </section>
 
-  <section class="sec2" style="padding-top:20px;padding-bottom:0">
-    <div class="wrap">
-      <div class="warn-note"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-clock"/></svg><span>スポットワークの特性上、アプリ上では募集が終了している場合もございますので予めご了承ください。</span></div>
-    </div>
-  </section>
 
-  <section class="sec2 qual-section" style="margin-top:24px">
+  <section class="sec2 qual-section" style="margin-top:10px">
     <div class="wrap">
       <div class="sec2-h"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-cert"/></svg>お持ちの資格を教えてください</div>
       <div class="sec2-sub">選んだ資格に合わせて、お仕事の情報をご案内します。</div>
@@ -504,6 +497,33 @@ footer{padding:28px 20px 34px;text-align:center;font-size:12px;color:#6B6B6B}
         <label class="qual-card"><input type="radio" name="qual" value="ケアマネジャー"><span class="row"><span class="radio"></span><span class="label">ケアマネジャー</span></span></label>
         <label class="qual-card"><input type="radio" name="qual" value="無資格"><span class="row"><span class="radio"></span><span class="label">無資格</span></span></label>
       </div>
+    </div>
+  </section>
+
+  <section class="sec2" style="padding-top:0;padding-bottom:0">
+    <div class="wrap">
+      <details class="job-detail-acc">
+        <summary>この求人のくわしい情報を見る</summary>
+        <div class="jd-body">
+
+  <div class="spec-sec">
+    <div class="wrap">
+      <div class="spec">
+        <div class="spec-row"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-pin"/></svg><b>勤務地</b><span id="specArea">大阪府堺市西区（最寄駅：鳳駅）</span></div>
+        <div class="spec-row"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-yen"/></svg><b>給与</b><span id="specPay">時給 1,280円〜</span></div>
+        <div class="spec-row"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-clock"/></svg><b>勤務時間</b><span id="specHours">0:00〜24:00の中で希望の時間</span></div>
+        <div class="spec-row"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-cert"/></svg><b>必須資格</b><span id="specEdu">介護関連の資格</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="wrap">
+      <div class="warn-note"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-clock"/></svg><span>スポットワークの特性上、アプリ上では募集が終了している場合もございますので予めご了承ください。</span></div>
+    </div>
+  </div>
+        </div>
+      </details>
     </div>
   </section>
 
