@@ -75,7 +75,7 @@ h2 .mk{background:linear-gradient(transparent 62%,var(--y) 62%);padding:0 2px}
 /* ===================================================
    画面1：求人 + 資格選択
 =================================================== */
-#screen1{padding-bottom:calc(116px + env(safe-area-inset-bottom))}
+#screen1{padding-bottom:32px}
 .topbar{
   background:var(--ink);color:#fff;padding:14px 20px;
   display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;
@@ -441,9 +441,63 @@ footer{padding:28px 20px 34px;text-align:center;font-size:12px;color:#6B6B6B}
 .topbar .tb-logo{height:24px;width:auto;flex:none;display:block}
 .topbar .tb-name{font-size:13px;font-weight:700}
 .final-logo{height:64px;width:auto;margin:0 auto 16px;display:block}
+
+/* ---------- 資格確認ポップアップ ---------- */
+.qpop{
+  position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.5);
+  display:none;align-items:center;justify-content:center;padding:16px;
+}
+.qpop.is-open{display:flex}
+.qpop-modal{
+  width:100%;max-width:400px;background:#fff;border-radius:var(--r);
+  padding:26px 20px 22px;text-align:center;
+  animation:qpopIn .22s ease-out;
+}
+@keyframes qpopIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.qpop-badge{
+  display:inline-block;background:var(--y);color:var(--ink);
+  font-size:12px;font-weight:700;padding:5px 14px;border-radius:var(--pill);
+}
+.qpop-title{font-size:21px;font-weight:700;line-height:1.5;margin-top:14px}
+.qpop-sub{font-size:13px;color:var(--sub);margin-top:10px;line-height:1.7}
+.qpop-list{margin-top:20px;display:grid;gap:10px}
+.qpop-btn{
+  width:100%;min-height:56px;padding:14px 16px;
+  background:var(--y);color:var(--ink);
+  border:none;border-radius:var(--pill);
+  font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;
+  box-shadow:0 5px 0 #D9B600;transition:.12s ease;
+}
+.qpop-btn:active{transform:translateY(3px);box-shadow:0 2px 0 #D9B600}
+.qpop-btn-sub{
+  background:#fff;color:var(--sub);
+  box-shadow:inset 0 0 0 2px var(--line);font-size:14.5px;min-height:50px;
+}
+.qpop-btn-sub:active{transform:translateY(2px);box-shadow:inset 0 0 0 2px var(--line)}
+body.qpop-lock{overflow:hidden}
 </style>
 </head>
 <body>
+<!-- =====================================================
+     資格確認ポップアップ（着地直後に表示・強制選択）
+===================================================== -->
+<div class="qpop is-open" id="qPop" role="dialog" aria-modal="true" aria-labelledby="qPopTitle">
+  <div class="qpop-modal">
+    <div class="qpop-head">
+      <span class="qpop-badge">かんたん1問</span>
+      <h2 class="qpop-title" id="qPopTitle">お持ちの資格を<br>教えてください</h2>
+      <p class="qpop-sub">選んだ資格に合わせて、お仕事の情報をご案内します。</p>
+    </div>
+    <div class="qpop-list">
+      <button type="button" class="qpop-btn" data-qual="介護福祉士">介護福祉士</button>
+      <button type="button" class="qpop-btn" data-qual="ヘルパー1級or2級">ヘルパー1級or2級</button>
+      <button type="button" class="qpop-btn" data-qual="ケアマネジャー">ケアマネジャー</button>
+      <button type="button" class="qpop-btn qpop-btn-sub" data-qual="無資格">資格を持っていない</button>
+    </div>
+  </div>
+</div>
+
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
 <g id="i-cert" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.4 14.4 7 22l5-2.4L17 22l-1.4-7.6"/></g>
@@ -490,18 +544,6 @@ footer{padding:28px 20px 34px;text-align:center;font-size:12px;color:#6B6B6B}
 
 
 
-  <section class="sec2 qual-section" style="margin-top:10px">
-    <div class="wrap">
-      <div class="sec2-h"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-cert"/></svg>お持ちの資格を教えてください</div>
-      <div class="sec2-sub">選んだ資格に合わせて、お仕事の情報をご案内します。</div>
-      <div class="qual-list" id="qualList">
-        <label class="qual-card"><input type="radio" name="qual" value="介護福祉士"><span class="row"><span class="radio"></span><span class="label">介護福祉士</span></span></label>
-        <label class="qual-card"><input type="radio" name="qual" value="ヘルパー1級or2級"><span class="row"><span class="radio"></span><span class="label">ヘルパー1級or2級</span></span></label>
-        <label class="qual-card"><input type="radio" name="qual" value="ケアマネジャー"><span class="row"><span class="radio"></span><span class="label">ケアマネジャー</span></span></label>
-        <label class="qual-card"><input type="radio" name="qual" value="無資格"><span class="row"><span class="radio"></span><span class="label">無資格</span></span></label>
-      </div>
-    </div>
-  </section>
 
   <section class="sec2" style="padding-top:0;padding-bottom:0">
     <div class="wrap">
@@ -530,9 +572,6 @@ footer{padding:28px 20px 34px;text-align:center;font-size:12px;color:#6B6B6B}
     </div>
   </section>
 
-  <div class="cta-bar">
-    <button id="nextBtn" class="cta-btn">次のステップへ</button>
-    <div class="cta-hint" id="ctaHint">資格を選択すると進めます</div>
   </div>
 </div>
 
@@ -836,45 +875,46 @@ footer{padding:28px 20px 34px;text-align:center;font-size:12px;color:#6B6B6B}
 
 <script>
 (function(){
-  var radios = document.querySelectorAll('input[name="qual"]');
-  var nextBtn = document.getElementById('nextBtn');
-  var cards = document.querySelectorAll('.qual-card');
-  var ctaHint = document.getElementById('ctaHint');
-  var selected = null;
-
-  radios.forEach(function(r){
-    r.addEventListener('change', function(){
-      selected = r.value;
-      nextBtn.classList.add('active');
-      cards.forEach(function(c){ c.classList.remove('is-selected'); });
-      var card = r.closest('.qual-card');
-      if (card) card.classList.add('is-selected');
-      if (ctaHint) ctaHint.textContent = '「' + r.value + '」で進みます';
-    });
-  });
-
+  var pop = document.getElementById('qPop');
   var JOB_AREA = '大阪府堺市西区・鳳駅';
   var JOB_PAY  = '時給1,280円〜';
 
-  nextBtn.addEventListener('click', function(){
-    if (!nextBtn.classList.contains('active')) return;
-    document.getElementById('screen1').style.display = 'none';
+  document.body.classList.add('qpop-lock');
 
-    if (selected === '無資格') {
-      document.getElementById('screen3').style.display = 'block';
-      window.scrollTo(0,0);
-      return;
+  function goLP(selected){
+    var tag   = document.getElementById('heroTag');
+    var title = document.getElementById('heroTitle');
+    var sub   = document.getElementById('heroSub');
+    var cta   = document.getElementById('heroCtaBtn');
+    var chip  = document.getElementById('heroQualChip');
+
+    tag.textContent = '介護資格が活きるスキマバイト';
+    title.innerHTML = '<span class="mk">' + selected + '</span>のあなたを、現場が待っています。';
+    sub.innerHTML   = JOB_AREA + 'で、<b>' + JOB_PAY + '</b>。<br>面接なし・履歴書なし。<b>給料日を待たなくていい。</b>';
+    cta.textContent = 'アプリでこのお仕事に応募する（無料）';
+    if (chip) {
+      var svg = chip.querySelector('svg');
+      chip.innerHTML = (svg ? svg.outerHTML : '') + selected + 'が活きる';
     }
-
-    document.getElementById('heroTitle').innerHTML =
-      '<span class="mk">' + selected + '</span>のあなたを、現場が待っています。';
-    document.getElementById('heroSub').innerHTML =
-      JOB_AREA + 'で、<b>' + JOB_PAY + '</b>。<br>面接なし・履歴書なし。<b>給料日を待たなくていい。</b>';
-    var chip = document.getElementById('heroQualChip');
-    chip.innerHTML = chip.querySelector('svg').outerHTML + selected + 'が活きる';
-
+    document.getElementById('screen1').style.display = 'none';
+    document.getElementById('screen3').style.display = 'none';
     document.getElementById('screen2').style.display = 'block';
-    window.scrollTo(0,0);
+  }
+
+  function goThanks(){
+    document.getElementById('screen1').style.display = 'none';
+    document.getElementById('screen2').style.display = 'none';
+    document.getElementById('screen3').style.display = 'block';
+  }
+
+  pop.querySelectorAll('.qpop-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var q = btn.getAttribute('data-qual');
+      pop.classList.remove('is-open');
+      document.body.classList.remove('qpop-lock');
+      if (q === '無資格') { goThanks(); } else { goLP(q); }
+      window.scrollTo(0,0);
+    });
   });
 })();
 
@@ -882,6 +922,9 @@ function goBack(){
   document.getElementById('screen2').style.display = 'none';
   document.getElementById('screen3').style.display = 'none';
   document.getElementById('screen1').style.display = 'block';
+  var pop = document.getElementById('qPop');
+  pop.classList.add('is-open');
+  document.body.classList.add('qpop-lock');
   window.scrollTo(0,0);
 }
 </script>
