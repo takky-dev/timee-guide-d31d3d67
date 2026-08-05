@@ -476,6 +476,24 @@ footer{padding:28px 20px 34px;text-align:center;font-size:12px;color:#6B6B6B}
 }
 .qpop-btn-sub:active{transform:translateY(2px);box-shadow:inset 0 0 0 2px var(--line)}
 body.qpop-lock{overflow:hidden}
+
+/* ---------- ポップアップ②：フォーム ---------- */
+.fpop-form{margin-top:20px;display:grid;gap:14px;text-align:left}
+.fpop-field{display:block}
+.fpop-label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.fpop-form input{
+  width:100%;height:52px;padding:0 14px;
+  border:2px solid var(--line);border-radius:var(--r-sm);
+  font-size:16px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.fpop-form input:focus{outline:none;border-color:var(--ink)}
+.fpop-form input.is-error{border-color:#D93025}
+.fpop-err{display:none;font-size:12px;color:#D93025;margin-top:5px}
+.fpop-err.show{display:block}
+.fpop-submit{margin-top:4px}
+.fpop-note{font-size:11.5px;color:var(--sub);line-height:1.7;margin-top:2px;text-align:center}
+.thanks-cta{margin-top:24px;display:flex;flex-direction:column;align-items:center}
+.thanks-cta .btn{max-width:340px}
 </style>
 </head>
 <body>
@@ -495,6 +513,39 @@ body.qpop-lock{overflow:hidden}
       <button type="button" class="qpop-btn" data-qual="ケアマネジャー">ケアマネジャー</button>
       <button type="button" class="qpop-btn qpop-btn-sub" data-qual="無資格">資格を持っていない</button>
     </div>
+  </div>
+</div>
+
+<!-- =====================================================
+     ポップアップ②：連絡先の入力（スキップ不可）
+===================================================== -->
+<div class="qpop" id="fPop" role="dialog" aria-modal="true" aria-labelledby="fPopTitle">
+  <div class="qpop-modal">
+    <div class="qpop-head">
+      <span class="qpop-badge">あと1ステップ</span>
+      <h2 class="qpop-title" id="fPopTitle">あと1ステップで、<br>応募できます</h2>
+      <p class="qpop-sub">
+        このお仕事は<b>資格の登録</b>が必要です。<br>
+        登録の進め方をご案内しますので、連絡先を教えてください。
+      </p>
+    </div>
+    <form class="fpop-form" id="fPopForm" novalidate>
+      <label class="fpop-field">
+        <span class="fpop-label">お名前</span>
+        <input type="text" id="fName" name="name" autocomplete="name"
+               placeholder="山田 太郎" required>
+        <span class="fpop-err" id="errName"></span>
+      </label>
+      <label class="fpop-field">
+        <span class="fpop-label">電話番号</span>
+        <input type="tel" id="fTel" name="tel" autocomplete="tel"
+               inputmode="numeric" placeholder="09012345678" required>
+        <span class="fpop-err" id="errTel"></span>
+      </label>
+      <button type="submit" class="qpop-btn fpop-submit">この内容で送信する</button>
+      <!-- ▼▼ プライバシーポリシーへの導線はここに追加してください ▼▼ -->
+      <p class="fpop-note">ご入力いただいた情報は、資格登録のご案内にのみ使用します。</p>
+    </form>
   </div>
 </div>
 
@@ -869,25 +920,30 @@ body.qpop-lock{overflow:hidden}
       <div class="thanks-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-check"/></svg></div>
       <h2>ご興味いただき、ありがとうございます</h2>
       <p>採用担当者よりご連絡させていただきます。</p>
+      <div class="thanks-cta">
+        <a class="btn" href="https://timee.go.link/kMTLo">アプリを無料でダウンロード</a>
+        <p class="btn-note">App Store / Google Play 対応 ・ 登録無料</p>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  var pop = document.getElementById('qPop');
+  var qPop = document.getElementById('qPop');
+  var fPop = document.getElementById('fPop');
   var JOB_AREA = '大阪府堺市西区・鳳駅';
   var JOB_PAY  = '時給1,280円〜';
+  var selectedQual = null;
 
   document.body.classList.add('qpop-lock');
 
-  function goLP(selected){
+  function showLP(selected){
     var tag   = document.getElementById('heroTag');
     var title = document.getElementById('heroTitle');
     var sub   = document.getElementById('heroSub');
     var cta   = document.getElementById('heroCtaBtn');
     var chip  = document.getElementById('heroQualChip');
-
     tag.textContent = '介護資格が活きるスキマバイト';
     title.innerHTML = '<span class="mk">' + selected + '</span>のあなたを、現場が待っています。';
     sub.innerHTML   = JOB_AREA + 'で、<b>' + JOB_PAY + '</b>。<br>面接なし・履歴書なし。<b>給料日を待たなくていい。</b>';
@@ -901,20 +957,66 @@ body.qpop-lock{overflow:hidden}
     document.getElementById('screen2').style.display = 'block';
   }
 
-  function goThanks(){
+  function showThanks(){
     document.getElementById('screen1').style.display = 'none';
     document.getElementById('screen2').style.display = 'none';
     document.getElementById('screen3').style.display = 'block';
   }
 
-  pop.querySelectorAll('.qpop-btn').forEach(function(btn){
+  function closeAll(){
+    qPop.classList.remove('is-open');
+    fPop.classList.remove('is-open');
+    document.body.classList.remove('qpop-lock');
+  }
+
+  // --- ポップアップ①：資格選択 ---
+  qPop.querySelectorAll('.qpop-btn').forEach(function(btn){
     btn.addEventListener('click', function(){
-      var q = btn.getAttribute('data-qual');
-      pop.classList.remove('is-open');
-      document.body.classList.remove('qpop-lock');
-      if (q === '無資格') { goThanks(); } else { goLP(q); }
-      window.scrollTo(0,0);
+      selectedQual = btn.getAttribute('data-qual');
+      if (selectedQual === '無資格') {
+        closeAll();
+        showThanks();
+        window.scrollTo(0,0);
+      } else {
+        qPop.classList.remove('is-open');
+        fPop.classList.add('is-open');
+      }
     });
+  });
+
+  // --- ポップアップ②：連絡先 ---
+  var form = document.getElementById('fPopForm');
+  var nameEl = document.getElementById('fName');
+  var telEl  = document.getElementById('fTel');
+
+  function setErr(input, errEl, msg){
+    if (msg) { input.classList.add('is-error'); errEl.textContent = msg; errEl.classList.add('show'); }
+    else { input.classList.remove('is-error'); errEl.textContent = ''; errEl.classList.remove('show'); }
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var ok = true;
+    var nameV = nameEl.value.trim();
+    var telV  = telEl.value.trim().replace(/[-‐－\s]/g, '');
+    var errN = document.getElementById('errName');
+    var errT = document.getElementById('errTel');
+
+    if (!nameV) { setErr(nameEl, errN, 'お名前を入力してください'); ok = false; }
+    else { setErr(nameEl, errN, ''); }
+
+    if (!telV) { setErr(telEl, errT, '電話番号を入力してください'); ok = false; }
+    else if (!/^0\d{9,10}$/.test(telV)) { setErr(telEl, errT, '電話番号の形式が正しくありません'); ok = false; }
+    else { setErr(telEl, errT, ''); }
+
+    if (!ok) return;
+
+    // ▼▼ ここで登録APIへ送信します（エンジニア実装）▼▼
+    // 送信データ: { name: nameV, tel: telV, qualification: selectedQual, jobId: ... }
+
+    closeAll();
+    showLP(selectedQual);
+    window.scrollTo(0,0);
   });
 })();
 
@@ -922,8 +1024,8 @@ function goBack(){
   document.getElementById('screen2').style.display = 'none';
   document.getElementById('screen3').style.display = 'none';
   document.getElementById('screen1').style.display = 'block';
-  var pop = document.getElementById('qPop');
-  pop.classList.add('is-open');
+  document.getElementById('fPop').classList.remove('is-open');
+  document.getElementById('qPop').classList.add('is-open');
   document.body.classList.add('qpop-lock');
   window.scrollTo(0,0);
 }
