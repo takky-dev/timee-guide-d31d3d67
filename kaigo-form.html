@@ -920,10 +920,10 @@ body.qpop-lock{overflow:hidden}
   <div class="thanks-wrap">
     <div class="thanks-card">
       <div class="thanks-icon"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-check"/></svg></div>
-      <h2 id="thanksTitle">ご興味いただき、ありがとうございます</h2>
-      <p id="thanksBody">採用担当者よりご連絡させていただきます。</p>
+      <h2 id="thanksTitle">ありがとうございます</h2>
+      <p id="thanksBody">担当者よりご連絡させていただきます。</p>
       <div class="thanks-cta" id="thanksCta" style="display:none">
-        <p class="thanks-lead">先にアプリを入れておくと、ご案内後すぐに応募できます。</p>
+        <p class="thanks-lead"><b>資格登録はアプリから行います。</b><br>先に入れておくと、ご案内後すぐに登録できます。</p>
         <a class="btn" href="https://timee.go.link/kMTLo">アプリを無料でダウンロード</a>
         <p class="btn-note">App Store / Google Play 対応 ・ 登録無料</p>
       </div>
@@ -966,14 +966,16 @@ body.qpop-lock{overflow:hidden}
     var b = document.getElementById('thanksBody');
     var c = document.getElementById('thanksCta');
     if (mode === 'contact') {
-      // 連絡先を送信した人
-      t.textContent = 'ありがとうございます';
-      b.textContent = '担当者より、資格登録のご案内をご連絡します。';
+      // 連絡先を送信した人：SMSで届くことを明記し、待つ理由を示す
+      t.textContent = '受け付けました';
+      b.innerHTML = '<b>SMSで、資格登録のご案内をお送りします。</b><br>'
+                  + '資格を登録すると、このお仕事に応募できるようになります。';
       c.style.display = 'flex';
     } else {
-      // 無資格の人（DL訴求はしない）
-      t.textContent = 'ご興味いただき、ありがとうございます';
-      b.textContent = '採用担当者よりご連絡させていただきます。';
+      // 無資格の人：この求人は対象外である事実を伝え、他の仕事へ繋げる
+      t.textContent = 'ありがとうございます';
+      b.innerHTML = 'このお仕事は資格をお持ちの方が対象ですが、<br>'
+                  + 'タイミーには資格がなくても働けるお仕事がたくさんあります。';
       c.style.display = 'none';
     }
     document.getElementById('screen1').style.display = 'none';
