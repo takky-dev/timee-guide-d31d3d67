@@ -531,8 +531,9 @@ body.qpop-lock{overflow:hidden}
     </div>
     <div class="qpop-list">
       <button type="button" class="qpop-btn" data-qual="介護福祉士">介護福祉士</button>
-      <button type="button" class="qpop-btn" data-qual="ヘルパー1級or2級">ヘルパー1級or2級</button>
-      <button type="button" class="qpop-btn" data-qual="ケアマネジャー">ケアマネジャー</button>
+      <button type="button" class="qpop-btn" data-qual="実務者研修（ヘルパー1級）">実務者研修（ヘルパー1級）</button>
+      <button type="button" class="qpop-btn" data-qual="初任者研修（ヘルパー2級）">初任者研修（ヘルパー2級）</button>
+      <button type="button" class="qpop-btn" data-qual="その他">その他（介護職員基礎研修など）</button>
       <button type="button" class="qpop-btn qpop-btn-sub" data-qual="無資格">資格を持っていない</button>
     </div>
   </div>
@@ -916,6 +917,7 @@ body.qpop-lock{overflow:hidden}
   var JOB_AREA = '大阪府堺市西区・鳳駅';
   var JOB_PAY  = '時給1,280円〜';
   var selectedQual = null;
+  var QUAL_LABEL = {'介護福祉士':'介護福祉士','実務者研修（ヘルパー1級）':'実務者研修（ヘルパー1級）','初任者研修（ヘルパー2級）':'初任者研修（ヘルパー2級）','その他':'その他（介護職員基礎研修など）'};
 
   document.body.classList.add('qpop-lock');
 
@@ -926,12 +928,16 @@ body.qpop-lock{overflow:hidden}
     var cta   = document.getElementById('heroCtaBtn');
     var chip  = document.getElementById('heroQualChip');
     tag.textContent = '介護資格が活きるスキマバイト';
-    title.innerHTML = '<span class="mk">' + selected + '</span>のあなたを、現場が待っています。';
+    if (selected === 'その他') {
+      title.innerHTML = '<span class="mk">あなたの介護経験</span>を、現場が待っています。';
+    } else {
+      title.innerHTML = '<span class="mk">' + selected + '</span>のあなたを、現場が待っています。';
+    }
     sub.innerHTML   = JOB_AREA + 'で、<b>' + JOB_PAY + '</b>。<br>面接なし・履歴書なし。<b>給料日を待たなくていい。</b>';
     cta.textContent = 'アプリでこのお仕事に応募する（無料）';
     if (chip) {
       var svg = chip.querySelector('svg');
-      chip.innerHTML = (svg ? svg.outerHTML : '') + selected + 'が活きる';
+      chip.innerHTML = (svg ? svg.outerHTML : '') + (selected === 'その他' ? '資格が活きる' : selected + 'が活きる');
     }
     document.getElementById('screen1').style.display = 'none';
     document.getElementById('screen3').style.display = 'none';
