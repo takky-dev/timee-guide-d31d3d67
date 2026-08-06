@@ -486,6 +486,7 @@ body.qpop-lock{overflow:hidden}
   transform:translateY(115%);transition:transform .32s cubic-bezier(.22,.61,.36,1);
 }
 .dlbar.is-open{transform:translateY(0)}
+body.dlbar-on{padding-bottom:120px}
 .dlbar-in{max-width:520px;margin:0 auto;text-align:center}
 .dlbar-lead{font-size:13px;color:var(--ink);margin-bottom:9px;line-height:1.5}
 .dlbar-lead b{font-weight:700}
@@ -976,32 +977,68 @@ function goBack(){
 </div>
 <script>
 (function(){
-  var bar = document.getElementById('dlBar');
+  var bar      = document.getElementById('dlBar');
   var closeBtn = document.getElementById('dlBarClose');
-  var dismissed = false;
-  var shown = false;
+  var screen2  = document.getElementById('screen2');
+  var RATIO    = 0.62;   // ページのこの位置まで読んだら表示
+  var dismissed = false, shown = false, armed = false;
 
+  // ---- ×で閉じる（以降は再表示しない） ----
   closeBtn.addEventListener('click', function(){
     dismissed = true;
     bar.classList.remove('is-open');
+    document.body.classList.remove('dlbar-on');
   });
 
-  function onScroll(){
+  function open(){
     if (dismissed || shown) return;
-    var s2 = document.getElementById('screen2');
-    // LP表示中のみ
-    if (!s2 || getComputedStyle(s2).display === 'none') return;
-    var doc = document.documentElement;
-    var scrolled = window.scrollY || doc.scrollTop;
-    var total = doc.scrollHeight - window.innerHeight;
-    if (total <= 0) return;
-    if (scrolled / total >= 0.6) {
-      shown = true;
-      bar.classList.add('is-open');
-    }
+    if (!screen2 || getComputedStyle(screen2).display === 'none') return;
+    shown = true;
+    bar.classList.add('is-open');
+    document.body.classList.add('dlbar-on');
   }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
+
+  // ---- 発火位置に目印を置く（IntersectionObserverで検知） ----
+  function arm(){
+    if (armed) return;
+    if (!screen2 || getComputedStyle(screen2).display === 'none') return;
+    var secs = screen2.querySelectorAll(':scope > section');
+    if (!secs.length) return;
+    armed = true;
+
+    // 目標位置に最も近いセクションの直前に置く
+    var target = screen2.scrollHeight * RATIO;
+    var mark = secs[0], best = Infinity;
+    for (var i = 0; i < secs.length; i++) {
+      var d = Math.abs(secs[i].offsetTop - target);
+      if (d < best) { best = d; mark = secs[i]; }
+    }
+
+    var sentinel = document.createElement('div');
+    sentinel.setAttribute('aria-hidden', 'true');
+    sentinel.style.cssText = 'height:1px;margin:0;padding:0';
+    mark.parentNode.insertBefore(sentinel, mark);
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(es){
+        for (var k = 0; k < es.length; k++) {
+          if (es[k].isIntersecting) { open(); io.disconnect(); }
+        }
+      });
+      io.observe(sentinel);
+    }
+    // 保険：scrollイベントでも同じ位置を判定
+    window.addEventListener('scroll', function(){
+      if (dismissed || shown) return;
+      if (sentinel.getBoundingClientRect().top <= window.innerHeight) open();
+    }, { passive: true });
+  }
+
+  // 資格選択でLPが出た直後に仕掛ける
+  document.querySelectorAll('#qPop .qpop-btn').forEach(function(b){
+    b.addEventListener('click', function(){ setTimeout(arm, 50); });
+  });
+  arm();
 })();
 </script>
 </body>
