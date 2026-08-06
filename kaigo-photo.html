@@ -477,34 +477,42 @@ footer{padding:28px 20px 34px;text-align:center;font-size:12px;color:#6B6B6B}
 .qpop-btn-sub:active{transform:translateY(2px);box-shadow:inset 0 0 0 2px var(--line)}
 body.qpop-lock{overflow:hidden}
 
-/* ---------- スクロール連動DLバー ---------- */
-.dlbar{
-  position:fixed;left:0;right:0;bottom:0;z-index:9000;
-  background:#fff;border-top:1px solid var(--line);
-  box-shadow:0 -6px 24px rgba(0,0,0,.14);
-  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
-  transform:translateY(115%);transition:transform .32s cubic-bezier(.22,.61,.36,1);
-}
-.dlbar.is-open{transform:translateY(0)}
-body.dlbar-on{padding-bottom:120px}
-.dlbar-in{max-width:520px;margin:0 auto;text-align:center}
-.dlbar-lead{font-size:13px;color:var(--ink);margin-bottom:9px;line-height:1.5}
-.dlbar-lead b{font-weight:700}
-.dlbar-btn{
+/* ---------- スクロール連動DLポップアップ ---------- */
+.dlpop{
+  position:fixed;inset:0;z-index:9500;
   display:flex;align-items:center;justify-content:center;
-  width:100%;background:var(--blue);color:#fff;
+  padding:20px;
+  background:rgba(33,33,33,.62);
+  opacity:0;visibility:hidden;transition:opacity .24s ease,visibility .24s ease;
+}
+.dlpop.is-open{opacity:1;visibility:visible}
+.dlpop-card{
+  position:relative;width:100%;max-width:340px;
+  background:#fff;border-radius:var(--r);
+  padding:30px 22px 24px;text-align:center;
+  box-shadow:0 18px 48px rgba(0,0,0,.28);
+  transform:translateY(14px) scale(.97);transition:transform .28s cubic-bezier(.22,.61,.36,1);
+}
+.dlpop.is-open .dlpop-card{transform:none}
+.dlpop-logo{width:78px;height:auto;margin:0 auto 16px;display:block}
+.dlpop-card h3{font-size:17px;font-weight:700;color:var(--ink);line-height:1.65}
+.dlpop-card p{margin-top:10px;font-size:13px;color:var(--sub);line-height:1.75}
+.dlpop-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;margin-top:20px;background:var(--blue);color:#fff;
   font-size:16px;font-weight:700;text-decoration:none;
-  padding:15px 20px;border-radius:var(--pill);
-  box-shadow:0 5px 0 var(--blue-d);transition:.12s ease;
+  padding:16px 18px;border-radius:var(--pill);
+  box-shadow:0 6px 0 var(--blue-d);transition:.12s ease;
 }
-.dlbar-btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--blue-d)}
-.dlbar-close{
-  position:absolute;top:-15px;right:12px;
-  width:34px;height:34px;border-radius:var(--pill);
+.dlpop-btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--blue-d)}
+.dlpop-note{margin-top:12px;font-size:11px;color:#8A8A8A}
+.dlpop-close{
+  position:absolute;top:-14px;right:-8px;
+  width:36px;height:36px;border-radius:var(--pill);
   background:var(--ink);color:#fff;border:none;
-  font-size:17px;line-height:1;cursor:pointer;
+  font-size:18px;line-height:1;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 2px 8px rgba(0,0,0,.25);
+  box-shadow:0 2px 10px rgba(0,0,0,.3);
 }
 </style>
 </head>
@@ -966,36 +974,49 @@ function goBack(){
 
 
 <!-- =====================================================
-     スクロール60%で出るDLバー（×で閉じられる）
+     スクロール60%で出るDLポップアップ（×で閉じられる）
 ===================================================== -->
-<div class="dlbar" id="dlBar" role="complementary" aria-label="アプリのダウンロード">
-  <button type="button" class="dlbar-close" id="dlBarClose" aria-label="閉じる">×</button>
-  <div class="dlbar-in">
-    <p class="dlbar-lead">このお仕事に応募するには<b>アプリが必要です</b></p>
-    <a class="dlbar-btn" href="https://timee.go.link/kMTLo">アプリを無料でダウンロード</a>
+<div class="dlpop" id="dlPop" role="dialog" aria-modal="false" aria-labelledby="dlPopTtl">
+  <div class="dlpop-card">
+    <button type="button" class="dlpop-close" id="dlPopClose" aria-label="閉じる">×</button>
+    <h3 id="dlPopTtl">このお仕事に応募するには<br>アプリが必要です</h3>
+    <p>登録は無料・最短3分。<br>まずはどんなお仕事があるか見てみませんか？</p>
+    <a class="dlpop-btn" href="https://timee.go.link/kMTLo">アプリを無料でダウンロード</a>
+    <p class="dlpop-note">App Store / Google Play 対応</p>
   </div>
 </div>
 <script>
 (function(){
-  var bar      = document.getElementById('dlBar');
-  var closeBtn = document.getElementById('dlBarClose');
+  var pop      = document.getElementById('dlPop');
+  var closeBtn = document.getElementById('dlPopClose');
   var screen2  = document.getElementById('screen2');
   var RATIO    = 0.62;   // ページのこの位置まで読んだら表示
   var dismissed = false, shown = false, armed = false;
 
-  // ---- ×で閉じる（以降は再表示しない） ----
-  closeBtn.addEventListener('click', function(){
+  // ---- ヘッダーのロゴを流用して表示（画像を増やさない） ----
+  var src = document.querySelector('.topbar img, header img');
+  if (src) {
+    var logo = src.cloneNode(true);
+    logo.className = 'dlpop-logo';
+    logo.removeAttribute('width'); logo.removeAttribute('height');
+    logo.alt = 'タイミー';
+    pop.querySelector('.dlpop-card').insertBefore(logo, pop.querySelector('h3'));
+  }
+
+  function close(){
     dismissed = true;
-    bar.classList.remove('is-open');
-    document.body.classList.remove('dlbar-on');
-  });
+    pop.classList.remove('is-open');
+  }
+  closeBtn.addEventListener('click', close);
+  // 背景をタップしても閉じる（カード内は閉じない）
+  pop.addEventListener('click', function(e){ if (e.target === pop) close(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
 
   function open(){
     if (dismissed || shown) return;
     if (!screen2 || getComputedStyle(screen2).display === 'none') return;
     shown = true;
-    bar.classList.add('is-open');
-    document.body.classList.add('dlbar-on');
+    pop.classList.add('is-open');
   }
 
   // ---- 発火位置に目印を置く（IntersectionObserverで検知） ----
